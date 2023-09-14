@@ -93,7 +93,7 @@ df = df[(df['subscribers_M'] >= subscriber_range[0]) & (df['subscribers_M'] <= s
 #Easter egg ;)
 if st.button("Click me for a surprise! 🎊"):
     st.balloons()
-    image = Image.open("https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/balloon.png")
+    image = "https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/balloon.png"
     st.image(image, use_column_width=0.75)
 
 
