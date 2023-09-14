@@ -152,7 +152,7 @@ temp = temp.rename(columns={'Title': 'Youtuber',
                             'subscribers_M': 'Subscribers (M)', 
                             'video_views_M': 'Views (M)', 
                             'created_year': 'Created year'})
-st.dataframe(temp, hide_index=True)
+st.dataframe(temp)
 
 with st.expander("Throwback to 2018: PewDiePie vs. T-Series"):
     image = "https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/pewLost.png"
