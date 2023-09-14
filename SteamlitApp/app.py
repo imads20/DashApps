@@ -9,6 +9,8 @@ from shapely.geometry import Point
 import folium
 from folium.plugins import MarkerCluster
 from streamlit_folium import st_folium
+import random
+from PIL import Image
 
 # Function to load the dataset
 @st.cache_data  # Cache the function to enhance performance
@@ -55,7 +57,14 @@ def load_data():
 df_full = load_data()
 
 # Tile
-st.title("Youtube Dashboard")
+st.title("YouTube Superstar Insights: Unleash the Data Dynamite! ✨💫🌟")
+
+# Horizontal line - uff, look at that orange
+st.markdown(
+    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #FFA500, #000000);">',
+    unsafe_allow_html=True
+)
+
 
 # Sidebar with filters
 st.sidebar.header("Filters 📊")
@@ -63,49 +72,99 @@ st.sidebar.header("Filters 📊")
 # Apply filters to the dataset
 df = df_full
 
+#Easter egg ;)
+if st.button("Click me for a surprise! 🎊"):
+    st.balloons()
+    image = Image.open("balloon.png")
+    st.image(image, use_column_width=0.75)
+
+
 # Introduction
 st.markdown("""
-            Welcome to the HR Attrition Dashboard. In the backdrop of rising employee turnovers, HR departments are stressing the significance of predicting and understanding employee departures. Through the lens of data analytics, this dashboard unveils the deeper causes of employee churn and proposes strategies to boost employee retention.
+            Welcome to the enchanting world of YouTube stardom, where this dazzling dataset unveils the juicy statistics of the biggest YouTube superstars. Picture it as the VIP backstage pass to the YouTube universe, where you can peek behind the curtain at the masterminds of online content.
+            
+            We've got the top dogs of YouTube in this dataset, complete with their subscriber counts, video views, upload frequencies, country of origin, and even their earnings. It's like having a secret decoder for YouTube success!
+            
+            So, whether you're a budding content creator seeking inspiration, a data wizard looking to decode the magic behind viral videos, or just someone fascinated by the ever-evolving world of online content, you're in for a wild ride. Dive headfirst into the YouTube cosmos, and let the data adventures begin!
 """)
-with st.expander("📊 **Objective**"):
-                 st.markdown("""
-At the heart of this dashboard is the mission to visually decode data, equipping HR experts with insights to tackle these queries:
-- Which company factions face a greater likelihood of employee exits?
-- What might be pushing these individuals to part ways?
-- Observing the discerned trends, what incentives might hold the key to decreasing the attrition rate?
-"""
+                             
+jokes = ["Why did the data scientist go broke? Because he used up all his cache! 💸",
+         "Parallel lines have so much in common... It's a shame they'll never meet. 📏",
+         "Why did the scarecrow become a successful data scientist? Because he was outstanding in his field! 🌾",
+         "Data scientists never sleep; they just enter a 'null' state. 😴",
+         "Data science is all about turning 'hard data' into 'heartfelt' insights. 💖",
+         "Why did the dashboard get an award? Because it had the 'metrics' for success! 🏆"
+         "Why was the data analyst always calm under pressure? Because they knew how to 'plot' their way out of any situation! 📈",
+         "Why did the dashboard win the race? Because it had the fastest data visualization! 🚀",
+         "What did the dashboard say after winning the data competition? 'I'm on the data highway to success!' 🛣️",
+         "Why did the dashboard get an award? Because it knew how to 'chart' a course to victory! 📊",
+         "How did the dashboard become a champion? It had a 'winning formula' plotted in its data! 📈",
+         "Why did the dashboard always come out on top? Because it had the 'data-savvy' to be a winner! 🥇"]
+joke_memes = ['fun1.png', 
+              'fun2.png', 
+              'fun3.png', 
+              'fun4.png', 
+              'fun5.png', 
+              'fun6.png']
+if st.button("🥁 Time for a cheeky pun 🥁"):
+    selected = random.choice(jokes)
+    st.markdown(f'<p style="color: #FF1493;">{selected}</p>', unsafe_allow_html=True)
+    
+    image_name = random.choice(joke_memes)
+    image = Image.open(image_name)
+    st.image(image, use_column_width=0.75)
+
+
+# Horizontal line - Feeling green-tastic today!
+st.markdown(
+    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #00FF00, #000000);">',
+    unsafe_allow_html=True
 )
+
+# Overview of data
+st.subheader("Top 10 Youtubers by Number of Subscribers 🥇")
+
+temp = df.sort_values('subscribers', ascending=False)[:10]
+temp = temp[['subscribers_mio', 'Title', 'channel_type', 'video_views_mio', 'created_year', 'Country']]
+temp['video_views_mio'] = temp['video_views_mio'].round(0)
+temp['subscribers_mio'] = temp['subscribers_mio'].round(2)
+temp['created_year'] = temp['created_year'].astype(int)
+temp['created_year'] = temp['created_year'].astype(str)
+temp = temp.rename(columns={'Title': 'Youtuber', 
+                            'channel_type': 'Type',
+                            'subscribers_mio': 'Subscribers (mio)', 
+                            'video_views_mio': 'Views (mio)', 
+                            'created_year': 'Created year'})
+st.dataframe(temp, hide_index=True)
+
+with st.expander("Throwback to 2018: PewDiePie vs. T-Series"):
+    image = Image.open("pewLost.png")
+    st.image(image, use_column_width=0.75)
+
+# Horizontal line - You are looking blue-tiful!
+st.markdown(
+    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #0000FF, #000000);">',
+    unsafe_allow_html=True
+)
+
+# Analysis
+st.subheader("🚀 Let's Dive into Youtuber Metrics! 🎥")
                              
 # Selection box for analysis                                         
 analysis_option = st.selectbox(
     "Select Analysis 📈",
-    ["Top 10 biggest Youtubers by number of subscribers", 
-     "Monthly earnings by number of subscribers",
+    ["Monthly earnings by number of subscribers",
      "Map of location of Youtubers",
-     "Option 4", 
-     "Option 5"]
+     "Bar chart of channel type distribution", 
+     "Pie chart of channel type distribution", 
+     "Relationship between Number of Uploads and Views",
+     ]
 )
 
+st.markdown(f'<h4 style="color: #333; font-weight: bold;">{analysis_option}</h4>', unsafe_allow_html=True)
+
 # Content of page base on selection
-if analysis_option == 'Top 10 biggest Youtubers by number of subscribers':
-    st.subheader(analysis_option)
-
-    temp = df.sort_values('subscribers', ascending=False)[:10]
-    temp = temp[['subscribers_mio', 'Title', 'channel_type', 'video_views_mio', 'created_year', 'Country']]
-    temp['video_views_mio'] = temp['video_views_mio'].round(0)
-    temp['subscribers_mio'] = temp['subscribers_mio'].round(2)
-    temp['created_year'] = temp['created_year'].astype(int)
-    temp['created_year'] = temp['created_year'].astype(str)
-    temp = temp.rename(columns={'Title': 'Youtuber', 
-                                'channel_type': 'Type',
-                                'subscribers_mio': 'Subscribers (mio)', 
-                                'video_views_mio': 'Views (mio)', 
-                                'created_year': 'Created year'})
-    st.dataframe(temp, hide_index=True)
-
-elif analysis_option == "Map of location of Youtubers":
-    st.subheader(analysis_option)
-
+if analysis_option == "Map of location of Youtubers":
     gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Latitude']))
     gdf.crs = "EPSG:4326"
     gdf = gdf.to_crs("EPSG:4326")
@@ -139,53 +198,91 @@ elif analysis_option == "Map of location of Youtubers":
     st_folium(m)
 
 elif analysis_option == 'Monthly earnings by number of subscribers': 
-    st.subheader(analysis_option) 
-
-    # Boxplots for monthly earnings by number of subscribers
+    # KDE distribution of monthly earnings compared to number of subscribers
+    temp = df.rename(columns={'subscriberGroup_mio': 'Subscribers (mio.)'})
     fig, ax = plt.subplots(1, 2, figsize=(15, 7))
 
-    # Lowest monthly earning by Subscribers
-    sns.boxplot(x="subscriberGroup_mio", y="lowest_monthly_earnings_1000", data=df, ax=ax[1], palette='Set2')
-    ax[1].set_title('Lowest monthly earnings by Subscribers')
-    ax[1].set_xlabel('Subscribers, millions')
-    ax[1].set_ylabel('Lowest monthly earnings, thousands')
-    
-    # Highest monthly earning by Subscribers
-    sns.boxplot(x="subscriberGroup_mio", y="highest_monthly_earnings_1000", data=df, ax=ax[0], palette='Set2')
-    ax[0].set_title('Highest monthly earnings by Subscribers')
-    ax[0].set_xlabel('Subscribers, millions')
-    ax[0].set_ylabel('Highest monthly earnings, thousands')
-    
-    plt.tight_layout()
+    # Plot KDE distribution for lowest monthly earnings by Subscribers
+    sns.kdeplot(data=temp, 
+                x="lowest_monthly_earnings_1000", 
+                hue="Subscribers (mio.)", 
+                palette='Set2', 
+                ax=ax[1])
+    ax[1].set_title('KDE Distribution of Lowest Monthly Earnings by Subscribers')
+    ax[1].set_xlabel('Lowest Monthly Earnings, thousands')
+    ax[1].set_ylabel('Density')
+
+    # Plot KDE distribution for highest monthly earnings by Subscribers
+    sns.kdeplot(data=temp, 
+                x="highest_monthly_earnings_1000", 
+                hue="Subscribers (mio.)", 
+                palette='Set2', 
+                ax=ax[0])
+    ax[0].set_title('KDE Distribution of Highest Monthly Earnings by Subscribers')
+    ax[0].set_xlabel('Highest Monthly Earnings, thousands')
+    ax[0].set_ylabel('Density')
+
+    # Display the KDE plots in Streamlit
     st.pyplot(fig)
 
-elif analysis_option == 'Option 4': 
-    st.subheader("Some chart")
+elif analysis_option == 'Bar chart of channel type distribution': 
     # Bar chart for channel type distribution
-    chart = alt.Chart(df).mark_bar().encode(
-    x=alt.X('channel_type:N', title='Channel Type'),
+    temp = df.rename(columns={'channel_type': 'Channel Type'})
+    chart = alt.Chart(temp).mark_bar().encode(
+    x=alt.X('Channel Type:N', title='Channel Type'),
     y=alt.Y('count():Q', title='Count'),
-    color='channel_type:N').properties(
-          title='Channel Type Distribution (Bar Chart)'
-          )
-
-    st.altair_chart(chart, use_container_width=True)
-
-elif analysis_option == 'Option 5': 
-    st.subheader("Some other chart")
-    # Pie chart for channel type distribution
-    chart = alt.Chart(df).mark_arc().encode(
-    color='channel_type:N',
-    theta='count:Q',
-    tooltip=['channel_type:N', 'count:Q']).properties(
-         title='Channel Type Distribution (Pie Chart)'
+    color='Channel Type:N'
+    ).properties(
+         title='Channel Type Distribution (Bar Chart)'
          )
 
     st.altair_chart(chart, use_container_width=True)
 
-else: 
-    st.subheader("I'm not done yet")
+elif analysis_option == 'Pie chart of channel type distribution': 
+    # Pie chart for channel type distribution
+    temp = df[['channel_type']].value_counts().reset_index()
+    temp = temp.rename(columns={'channel_type': 'Channel Type'})
 
+    chart = alt.Chart(temp).mark_arc().encode(
+        theta='count:Q',
+        color='Channel Type:N',
+        tooltip=['Channel Type', 'count']
+    ).properties(
+        title='Channel Type Distribution',
+        width=300,
+        height=300
+    ).project('identity')
 
+    st.altair_chart(chart, use_container_width=True)
+
+elif analysis_option == 'Relationship between Number of Uploads and Views':
+      fig, ax = plt.subplots()
+      ax.scatter(df['uploads'], df['video views'], alpha=0.5)
+      ax.set_xlabel('Number of Uploads')
+      ax.set_ylabel('Number of Views')
+      ax.set_title('Uploads vs. Views')
+      
+      st.pyplot(fig)
+
+# Horizontal line - nice hot pink, huh?
+st.markdown(
+    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #FF0066 20%, #000000 80%);">',
+    unsafe_allow_html=True
+)
+
+# Random quotes to get us through it all (:
+quotes = ["Data science: Where we spend 80% of our time cleaning data and the other 20% complaining about it 🙃", 
+          "Data science is easy; it's like riding a bike. Except the bike is on fire, you're on fire, everything is on fire, and you're in hell 🥵", 
+          "Data scientists make great detectives; we can find correlations between anything...except a social life 🙃",
+          "Machine learning: Because 'I don't know what I'm doing' is just a fancy term for 'innovation 🤓'",
+          "Data science is like magic, but instead of pulling a rabbit out of a hat, you pull insights out of a dataset 🪄",
+          "In data science, we don't make mistakes; we have 'learning experiences' that help us improve skills 🚀",
+          "Data scientists don't age; they just get replaced by newer models 😉",
+          "Data scientists: Making sense of data one 'WTF?' at a time 🥵",
+          "Data science is 90% data, 10% science, and 100% complaining about data quality 🫠",
+          "If a data scientist solves a problem in a forest and no one is around to hear, did they even use Python? 🐍",]
+if st.button("End the week with a data-tastic smile! 😎"):
+    selected = random.choice(quotes)
+    st.markdown(f'<p style="color: #0000FF;">{selected}</p>', unsafe_allow_html=True)
 
 
