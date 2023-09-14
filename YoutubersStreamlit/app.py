@@ -16,7 +16,7 @@ from PIL import Image
 @st.cache_data  # Cache the function to enhance performance
 def load_data():
     # Define the file path
-    file_path = 'https://github.com/imads20/DashApps/blob/main/YoutubersStreamlit/global_youtube_data_2023.csv'
+    file_path = 'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/global_youtube_data_2023.csv'
     
     # Load the CSV file into a pandas dataframe
     df = pd.read_csv(file_path)
