@@ -93,7 +93,7 @@ df = df[(df['subscribers_M'] >= subscriber_range[0]) & (df['subscribers_M'] <= s
 #Easter egg ;)
 if st.button("Click me for a surprise! 🎊"):
     st.balloons()
-    image = Image.open(path + "balloon.png")
+    image = Image.open("https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/balloon.png")
     st.image(image, use_column_width=0.75)
 
 
@@ -118,18 +118,18 @@ jokes = ["Why did the data scientist go broke? Because he used up all his cache!
          "Why did the dashboard get an award? Because it knew how to 'chart' a course to victory! 📊",
          "How did the dashboard become a champion? It had a 'winning formula' plotted in its data! 📈",
          "Why did the dashboard always come out on top? Because it had the 'data-savvy' to be a winner! 🥇"]
-joke_memes = ['fun1.png', 
-              'fun2.png', 
-              'fun3.png', 
-              'fun4.png', 
-              'fun5.png', 
-              'fun6.png']
+joke_memes = ['https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/fun1.png', 
+              'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/fun2.png', 
+              'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/fun3.png', 
+              'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/fun4.png', 
+              'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/fun5.png', 
+              'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/fun6.png']
 if st.button("🥁 Time for a cheeky pun 🥁"):
     selected = random.choice(jokes)
     st.markdown(f'<p style="color: #FF1493;">{selected}</p>', unsafe_allow_html=True)
     
     image_name = random.choice(joke_memes)
-    image = Image.open(path + image_name)
+    image = Image.open(image_name)
     st.image(image, use_column_width=0.75)
 
 
@@ -156,7 +156,7 @@ temp = temp.rename(columns={'Title': 'Youtuber',
 st.dataframe(temp, hide_index=True)
 
 with st.expander("Throwback to 2018: PewDiePie vs. T-Series"):
-    image = Image.open(path + "pewLost.png")
+    image = Image.open("https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/pewLost.png")
     st.image(image, use_column_width=0.75)
 
 # Horizontal line - You are looking blue-tiful!
