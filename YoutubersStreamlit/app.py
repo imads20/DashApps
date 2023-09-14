@@ -16,7 +16,7 @@ from PIL import Image
 @st.cache_data  # Cache the function to enhance performance
 def load_data():
     # Define the file path
-    file_path = 'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/global_youtube_data_2023.csv'
+    file_path = path + 'global_youtube_data_2023.csv'
     
     # Load the CSV file into a pandas dataframe
     df = pd.read_csv(file_path)
@@ -52,6 +52,8 @@ def load_data():
     df['Latitude'].fillna(latitude_mode, inplace=True)
 
     return df
+
+path = 'https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/'
 
 # Load the data using the defined function
 df_full = load_data()
@@ -91,7 +93,7 @@ df = df[(df['subscribers_M'] >= subscriber_range[0]) & (df['subscribers_M'] <= s
 #Easter egg ;)
 if st.button("Click me for a surprise! 🎊"):
     st.balloons()
-    image = Image.open("balloon.png")
+    image = Image.open(path + "balloon.png")
     st.image(image, use_column_width=0.75)
 
 
@@ -127,7 +129,7 @@ if st.button("🥁 Time for a cheeky pun 🥁"):
     st.markdown(f'<p style="color: #FF1493;">{selected}</p>', unsafe_allow_html=True)
     
     image_name = random.choice(joke_memes)
-    image = Image.open(image_name)
+    image = Image.open(path + image_name)
     st.image(image, use_column_width=0.75)
 
 
@@ -154,7 +156,7 @@ temp = temp.rename(columns={'Title': 'Youtuber',
 st.dataframe(temp, hide_index=True)
 
 with st.expander("Throwback to 2018: PewDiePie vs. T-Series"):
-    image = Image.open("pewLost.png")
+    image = Image.open(path + "pewLost.png")
     st.image(image, use_column_width=0.75)
 
 # Horizontal line - You are looking blue-tiful!
