@@ -22,7 +22,7 @@ def load_data():
     df = pd.read_csv(file_path)
 
     # Drop irrelevant columns
-    df = df[['Title', 'subscribers', 'video views', 'uploads', 'channel_type', 'created_year', 'lowest_monthly_earnings', 'highest_monthly_earnings', 'Country', 'Longitude', 'Latitude']]
+    df = df[['Title', 'Youtuber', 'subscribers', 'video views', 'uploads', 'channel_type', 'created_year', 'lowest_monthly_earnings', 'highest_monthly_earnings', 'Country', 'Longitude', 'Latitude']]
 
     # Convert high numbers to more readable numbers
     df['subscribers_M'] = df['subscribers'] / 1000000
@@ -110,8 +110,7 @@ jokes = ["Why did the data scientist go broke? Because he used up all his cache!
          "Parallel lines have so much in common... It's a shame they'll never meet. 📏",
          "Why did the scarecrow become a successful data scientist? Because he was outstanding in his field! 🌾",
          "Data scientists never sleep; they just enter a 'null' state. 😴",
-         "Data science is all about turning 'hard data' into 'heartfelt' insights. 💖",
-         "Why did the dashboard get an award? Because it had the 'metrics' for success! 🏆"
+         "Why did the dashboard get an award? Because it had the 'metrics' for success! 🏆",
          "Why was the data analyst always calm under pressure? Because they knew how to 'plot' their way out of any situation! 📈",
          "Why did the dashboard win the race? Because it had the fastest data visualization! 🚀",
          "What did the dashboard say after winning the data competition? 'I'm on the data highway to success!' 🛣️",
@@ -170,10 +169,11 @@ st.subheader("🚀 Let's Dive into Youtuber Metrics! 🎥")
 # Selection box for analysis                                         
 analysis_option = st.selectbox(
     "Select Analysis 📈",
-    ["Monthly earnings by number of subscribers",
-     "Map of location of Youtubers",
-     "Bar chart of channel type distribution", 
-     "Pie chart of channel type distribution", 
+    ["Relationship between Year Created and Subscribers", 
+     "Monthly Earnings by Number of Subscribers",
+     "Map of Location of Youtubers",
+     "Bar Chart of Channel Type Distribution", 
+     "Pie Chart of Country Distribution", 
      "Relationship between Number of Uploads and Views",
      ]
 )
@@ -181,7 +181,7 @@ analysis_option = st.selectbox(
 st.markdown(f'<h4 style="color: #333; font-weight: bold;">{analysis_option}</h4>', unsafe_allow_html=True)
 
 # Content of page base on selection
-if analysis_option == "Map of location of Youtubers":
+if analysis_option == "Map of Location of Youtubers":
     gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df['Longitude'], df['Latitude']))
     gdf.crs = "EPSG:4326"
     gdf = gdf.to_crs("EPSG:4326")
@@ -214,7 +214,7 @@ if analysis_option == "Map of location of Youtubers":
 
     st_folium(m)
 
-elif analysis_option == 'Monthly earnings by number of subscribers': 
+elif analysis_option == 'Monthly Earnings by Number of Subscribers': 
     # KDE distribution of monthly earnings compared to number of subscribers
     temp = df.rename(columns={'subscriberGroup_M': 'Subscribers (M)'})
     fig, ax = plt.subplots(1, 2, figsize=(15, 7))
@@ -242,7 +242,7 @@ elif analysis_option == 'Monthly earnings by number of subscribers':
     # Display the KDE plots in Streamlit
     st.pyplot(fig)
 
-elif analysis_option == 'Bar chart of channel type distribution': 
+elif analysis_option == 'Bar Chart of Channel Type Distribution': 
     # Bar chart for channel type distribution
     temp = df.rename(columns={'channel_type': 'Channel Type'})
     chart = alt.Chart(temp).mark_bar().encode(
@@ -255,17 +255,16 @@ elif analysis_option == 'Bar chart of channel type distribution':
 
     st.altair_chart(chart, use_container_width=True)
 
-elif analysis_option == 'Pie chart of channel type distribution': 
+elif analysis_option == 'Pie Chart of Country Distribution': 
     # Pie chart for channel type distribution
-    temp = df[['channel_type']].value_counts().reset_index()
-    temp = temp.rename(columns={'channel_type': 'Channel Type'})
+    temp = df[['Country']].value_counts().reset_index()
 
     chart = alt.Chart(temp).mark_arc().encode(
         theta='count:Q',
-        color='Channel Type:N',
-        tooltip=['Channel Type', 'count']
+        color='Country:N',
+        tooltip=['Country', 'count']
     ).properties(
-        title='Channel Type Distribution',
+        title='Country Distribution',
         width=300,
         height=300
     ).project('identity')
@@ -281,6 +280,64 @@ elif analysis_option == 'Relationship between Number of Uploads and Views':
       
       st.pyplot(fig)
 
+elif analysis_option == 'Relationship between Year Created and Subscribers':
+    # Suppress the warning
+    pd.options.mode.chained_assignment = None
+
+    # Filter the DataFrame to include data from 2000 to 2023
+    filtered_df = df[(df['created_year'] >= 2000) & (df['created_year'] <= 2023)]
+
+    # Calculate correlation for the filtered data
+    correlation = filtered_df['created_year'].corr(filtered_df['subscribers'])
+
+    # Calculate years since channel was created
+    current_year = 2023  # You can adjust this to the current year
+    filtered_df['years_since_creation'] = current_year - filtered_df['created_year']
+
+    # Create a scatter plot using Altair with customized tooltips, interactivity, and formatted x-axis
+    scatter_plot = alt.Chart(filtered_df).mark_circle().encode(
+        x=alt.X('created_year:O',
+                axis=alt.Axis(format='d')),
+                y='subscribers',
+                tooltip=[
+                    alt.Tooltip('created_year:O', title='Started in'),
+                    alt.Tooltip('years_since_creation:Q', title='Age (years)'),
+                    'subscribers', 'Youtuber'
+                    ]).properties(width=600,height=400).configure_mark(opacity=0.6).interactive()
+
+    # Create a column layout for questions and answers
+    col1, col2 = st.columns(2)  # Adjust the column widths as needed
+
+    # Define the questions and answers
+    questions = [
+        "1. Is there a noticeable trend in the scatterplot?",
+        "2. What is the strength and direction of the correlation between creation year and subscribers?",
+        "3. Are there any outliers in the data?",
+        "4. How does the number of uploads relate to subscribers?",
+        "5. What insights can we gather about the distribution of channels by channel type?"
+    ]
+
+    answers = [
+        "There appears to be a slight positive trend in the scatterplot, indicating that channels created more recently tend to have slightly higher subscribers.",
+        f"The correlation coefficient between the year of creation and subscribers is approximately {correlation:.2f}, indicating a weak negative correlation.",
+        "To answer this question, we can analyze the distribution of data points that fall significantly far from the general trend in the scatterplot.",
+        "A deeper analysis of the relationship between the number of uploads and subscribers is required to provide insights.",
+        "We can create a histogram or bar chart to visualize the distribution of channels by channel type."
+    ]
+
+    # Loop through questions and answers
+    for i, question in enumerate(questions):
+        expander = col1.expander(f"Question {i + 1}: {question}", expanded=False)  # Initially closed
+        with expander:
+            st.write(answers[i])
+
+    # Display the scatter plot in the second column
+    col2.write("Scatter Plot showing the relationship between Year Created and Subscribers")
+    col2.altair_chart(scatter_plot)
+
+    # Display the correlation coefficient
+    col2.write(f"Correlation Coefficient between Year Created and Subscribers: {correlation:.2f}")
+
 # Horizontal line - nice hot pink, huh?
 st.markdown(
     '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #FF0066 20%, #000000 80%);">',
@@ -293,11 +350,12 @@ quotes = ["Data science: Where we spend 80% of our time cleaning data and the ot
           "Data scientists make great detectives; we can find correlations between anything...except a social life 🙃",
           "Machine learning: Because 'I don't know what I'm doing' is just a fancy term for 'innovation 🤓'",
           "Data science is like magic, but instead of pulling a rabbit out of a hat, you pull insights out of a dataset 🪄",
-          "In data science, we don't make mistakes; we have 'learning experiences' that help us improve skills 🚀",
+          "In data science, we don't make mistakes; we have 'learning experiences' that help us improve our skills 🚀",
           "Data scientists don't age; they just get replaced by newer models 😉",
           "Data scientists: Making sense of data one 'WTF?' at a time 🥵",
           "Data science is 90% data, 10% science, and 100% complaining about data quality 🫠",
-          "If a data scientist solves a problem in a forest and no one is around to hear, did they even use Python? 🐍",]
+          "If a data scientist solves a problem in a forest and no one is around to hear, did they even use Python? 🐍",
+          "Data science is all about turning 'hard data' into 'heartfelt' insights. 💖"]
 if st.button("End the week with a data-tastic smile! 😎"):
     selected = random.choice(quotes)
     st.markdown(f'<p style="color: #0000FF;">{selected}</p>', unsafe_allow_html=True)
