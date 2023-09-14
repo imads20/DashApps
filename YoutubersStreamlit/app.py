@@ -128,8 +128,7 @@ if st.button("🥁 Time for a cheeky pun 🥁"):
     selected = random.choice(jokes)
     st.markdown(f'<p style="color: #FF1493;">{selected}</p>', unsafe_allow_html=True)
     
-    image_name = random.choice(joke_memes)
-    image = Image.open(image_name)
+    image = random.choice(joke_memes)
     st.image(image, use_column_width=0.75)
 
 
@@ -156,7 +155,7 @@ temp = temp.rename(columns={'Title': 'Youtuber',
 st.dataframe(temp, hide_index=True)
 
 with st.expander("Throwback to 2018: PewDiePie vs. T-Series"):
-    image = Image.open("https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/pewLost.png")
+    image = "https://raw.githubusercontent.com/imads20/DashApps/main/YoutubersStreamlit/pewLost.png"
     st.image(image, use_column_width=0.75)
 
 # Horizontal line - You are looking blue-tiful!
