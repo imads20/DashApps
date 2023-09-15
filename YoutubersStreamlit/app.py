@@ -178,7 +178,7 @@ analysis_option = st.selectbox(
      ]
 )
 
-st.markdown(f'<h4 style="color: #333; font-weight: bold;">{analysis_option}</h4>', unsafe_allow_html=True)
+st.subheader(analysis_option)
 
 # Content of page base on selection
 if analysis_option == "Map of Location of Youtubers":
