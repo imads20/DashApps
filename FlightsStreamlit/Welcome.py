@@ -14,4 +14,4 @@ st.markdown(
 """
 )
 
-st.success("Please select a page from the sidebar on the left to learn more!")
+st.success("Please select a page from the manu on the left to learn more!")
