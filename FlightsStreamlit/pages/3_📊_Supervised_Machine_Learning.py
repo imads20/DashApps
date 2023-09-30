@@ -8,15 +8,7 @@ st.set_page_config(
     page_icon="🛫",
 )
 
-st.write("# Supervised Machine Learning")
-
-# Horizontal line
-st.markdown(
-    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #FFA500, #000000);">',
-    unsafe_allow_html=True
-)
-
-df = pd.read_csv("cleaned.csv")
+df = pd.read_csv("https://raw.githubusercontent.com/imads20/DashApps/main/FlightsStreamlit/cleaned.csv")
 
 X = df[['stop', 'duration_minutes']]
 y = df[['price']]
@@ -35,6 +27,20 @@ def price_predict(stop, duration):
     string = f"Estimated flight price is ${(prediction_value[0])}"
     
     return string
+
+
+st.write("# Supervised Machine Learning")
+
+# Horizontal line
+st.markdown(
+    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #FFA500, #000000);">',
+    unsafe_allow_html=True
+)
+
+with st.expander("Click to learn more about the model"):
+    st.markdown(
+        'This is some text explaning our model'
+    )
 
 # Input fields for stop and duration
 stop = st.number_input("Number of Stops", min_value=0, max_value=2, step=1, value=0)
