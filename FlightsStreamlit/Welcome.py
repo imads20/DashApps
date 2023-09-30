@@ -7,10 +7,11 @@ st.set_page_config(
 
 st.write("# Welcome to Flight Prices Analysis! 👋")
 
-st.sidebar.success("Select a page from the above.")
-
 st.markdown(
     """
     This Streamlit App contains an analysis on business class flight prices in the period ... to ...
+
 """
 )
+
+st.success("Please select a page from the sidebar on the left to learn more!")
