@@ -7,6 +7,12 @@ st.set_page_config(
 
 st.write("# Welcome to Business Class Flight Prices Analysis! 🛫")
 
+# Horizontal line
+st.markdown(
+    '<hr style="border: none; height: 5px; background: linear-gradient(90deg, #FFA500, #000000);">',
+    unsafe_allow_html=True
+)
+
 st.markdown(
     """
     This Streamlit App contains an analysis on business class flight prices in the period ... to ...
